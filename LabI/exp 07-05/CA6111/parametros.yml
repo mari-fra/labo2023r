@@ -1,0 +1,4 @@
+experimento: CA6111
+dataset: dataset_pequeno.csv
+metodo: Frollmean
+home: ~/Documents/MaestriaAustral/LaboratorioI/LabI/labo2023r/LabI/
