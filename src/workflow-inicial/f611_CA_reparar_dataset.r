@@ -56,22 +56,23 @@ CorregirCampoMes <- function(pcampo, pmeses) {
   ]
 }
 
-CorregirCampoMes_Frollmean <- function(pcampo, pmeses) {
-  tbl <- dataset[, list(
-    "v1" = shift(get(pcampo), 2, type = "lag"),
-    "v2" = shift(get(pcampo), 2, type = "lead"),
-    "v3" = shift(get(pcampo), 1, type = "lag"),
-    "v4" = shift(get(pcampo), 1, type = "lead")
+CorregirCampoMes_Frollmean <- function(pcampo) {
+  tbl <- dataset[, list(  #Se crea el dataset tbl con cuatro columnas
+    "v1" = shift(get(pcampo), 2, type = "lag"), #2 meses antes
+    "v2" = shift(get(pcampo), 2, type = "lead"), #1 mes antes
+    "v3" = shift(get(pcampo), 1, type = "lag"), #1 mes despues
+    "v4" = shift(get(pcampo), 1, type = "lead") #2 meses despues
   ),
-  by = numero_de_cliente
+  by = numero_de_cliente  #Agrupa por cliente. 
   ]
+  #Imp: debe estar ordenado por foto_mes y nro de cliente
   
-  tbl[, numero_de_cliente := NULL]
-  tbl[, promedio := rowMeans(tbl[, list(v1, v2, v3, v4)], na.rm = TRUE)]
-  
+  tbl[, numero_de_cliente := NULL] #completa con null esta variable
+  tbl[, promedio := rowMeans(tbl[, list(v1, v2, v3, v4)], na.rm = TRUE)] #promedia por fila las 4 columnas generadas
+  #y agrega la columna promedio
   dataset[
     ,
-    paste0(pcampo) := ifelse(is.na(get(pcampo)) | get(pcampo) == 0,
+    paste0(pcampo) := ifelse(is.na(get(pcampo)) | get(pcampo) == 0, #si el valore es NA o 0 corrige pcampo con promedio
                              tbl$promedio,
                              get(pcampo)),
     with = FALSE
@@ -232,62 +233,63 @@ Corregir_MachineLearning <- function(dataset) {
 }
 
 Corregir_Frollmean <- function(dataset) {  
-  CorregirCampoMes_Frollmean("thomebanking", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("chomebanking_transacciones", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("tcallcenter", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ccallcenter_transacciones", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("cprestamos_personales", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mprestamos_personales", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mprestamos_hipotecarios", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ccajas_transacciones", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ccajas_consultas", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ccajas_depositos", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ccajas_extracciones", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ccajas_otras", c(201901, 201906, 202001, 202101, 202106))
+  CorregirCampoMes_Frollmean("thomebanking" )
+  CorregirCampoMes_Frollmean("chomebanking_transacciones" )
+  CorregirCampoMes_Frollmean("tcallcenter" )
+  CorregirCampoMes_Frollmean("ccallcenter_transacciones" )
+  CorregirCampoMes_Frollmean("cprestamos_personales" )
+  CorregirCampoMes_Frollmean("mprestamos_personales" )
+  CorregirCampoMes_Frollmean("mprestamos_hipotecarios" )
+  CorregirCampoMes_Frollmean("ccajas_transacciones" )
+  CorregirCampoMes_Frollmean("ccajas_consultas" )
+  CorregirCampoMes_Frollmean("ccajas_depositos" )
+  CorregirCampoMes_Frollmean("ccajas_extracciones" )
+  CorregirCampoMes_Frollmean("ccajas_otras" )
   
-  CorregirCampoMes_Frollmean("ctarjeta_visa_debitos_automaticos", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mttarjeta_visa_debitos_automaticos", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("Visa_mfinanciacion_limite", c(201901, 201906, 202001, 202101, 202106))
+  CorregirCampoMes_Frollmean("ctarjeta_visa_debitos_automaticos" )
+  CorregirCampoMes_Frollmean("mttarjeta_visa_debitos_automaticos" )
+  CorregirCampoMes_Frollmean("Visa_mfinanciacion_limite" )
   
-  CorregirCampoMes_Frollmean("mrentabilidad", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mrentabilidad_annual", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mcomisiones", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mpasivos_margen", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mactivos_margen", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ccomisiones_otras", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mcomisiones_otras", c(201901, 201906, 202001, 202101, 202106))
+  CorregirCampoMes_Frollmean("mrentabilidad" )
+  CorregirCampoMes_Frollmean("mrentabilidad_annual" )
+  CorregirCampoMes_Frollmean("mcomisiones" )
+  CorregirCampoMes_Frollmean("mpasivos_margen" )
+  CorregirCampoMes_Frollmean("mactivos_margen" )
+  CorregirCampoMes_Frollmean("ccomisiones_otras" )
+  CorregirCampoMes_Frollmean("mcomisiones_otras" )
   
-  CorregirCampoMes_Frollmean("ctarjeta_visa_descuentos", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ctarjeta_master_descuentos", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mtarjeta_visa_descuentos", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mtarjeta_master_descuentos", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ccajeros_propios_descuentos", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mcajeros_propios_descuentos", c(201901, 201906, 202001, 202101, 202106))
+  CorregirCampoMes_Frollmean("ctarjeta_visa_descuentos" )
+  CorregirCampoMes_Frollmean("ctarjeta_master_descuentos" )
+  CorregirCampoMes_Frollmean("mtarjeta_visa_descuentos" )
+  CorregirCampoMes_Frollmean("mtarjeta_master_descuentos" )
+  CorregirCampoMes_Frollmean("ccajeros_propios_descuentos" )
+  CorregirCampoMes_Frollmean("mcajeros_propios_descuentos" )
   
-  CorregirCampoMes_Frollmean("cliente_vip", c(201901, 201906, 202001, 202101, 202106))
+  CorregirCampoMes_Frollmean("cliente_vip" )
   
-  CorregirCampoMes_Frollmean("active_quarter", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mcuentas_saldo", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ctarjeta_debito_transacciones", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mautoservicio", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ctarjeta_visa_transacciones", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ctarjeta_visa_transacciones", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("cextraccion_autoservicio", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mextraccion_autoservicio", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ccheques_depositados", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mcheques_depositados", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mcheques_emitidos", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mcheques_emitidos", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ccheques_depositados_rechazados", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mcheques_depositados_rechazados", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("ccheques_emitidos_rechazados", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("mcheques_emitidos_rechazados", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("catm_trx", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("matm", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("catm_trx_other", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("matm_other", c(201901, 201906, 202001, 202101, 202106))
-  CorregirCampoMes_Frollmean("cmobile_app_trx", c(201901, 201906, 202001, 202101, 202106))
+  CorregirCampoMes_Frollmean("active_quarter" )
+  CorregirCampoMes_Frollmean("mcuentas_saldo" )
+  CorregirCampoMes_Frollmean("ctarjeta_debito_transacciones" )
+  CorregirCampoMes_Frollmean("mautoservicio" )
+  CorregirCampoMes_Frollmean("ctarjeta_visa_transacciones" )
+  CorregirCampoMes_Frollmean("ctarjeta_visa_transacciones" )
+  CorregirCampoMes_Frollmean("cextraccion_autoservicio" )
+  CorregirCampoMes_Frollmean("mextraccion_autoservicio" )
+  CorregirCampoMes_Frollmean("ccheques_depositados" )
+  CorregirCampoMes_Frollmean("mcheques_depositados" )
+  CorregirCampoMes_Frollmean("mcheques_emitidos" )
+  CorregirCampoMes_Frollmean("mcheques_emitidos" )
+  CorregirCampoMes_Frollmean("ccheques_depositados_rechazados" )
+  CorregirCampoMes_Frollmean("mcheques_depositados_rechazados" )
+  CorregirCampoMes_Frollmean("ccheques_emitidos_rechazados" )
+  CorregirCampoMes_Frollmean("mcheques_emitidos_rechazados" )
+  CorregirCampoMes_Frollmean("catm_trx" )
+  CorregirCampoMes_Frollmean("matm" )
+  CorregirCampoMes_Frollmean("catm_trx_other" )
+  CorregirCampoMes_Frollmean("matm_other" )
+  CorregirCampoMes_Frollmean("cmobile_app_trx" )
 }
+
 
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
@@ -314,12 +316,13 @@ write_yaml(PARAM, file = "parametros.yml") # escribo parametros utilizados
 
 setorder(dataset, numero_de_cliente, foto_mes)
 
+#para varidar guardamos una tabla resumen - Antes de aplicar la funcion
 columnasDF <- data.frame(columna1 = dataset$numero_de_cliente,
                          columna2 = dataset$foto_mes,
                          columna3 = dataset$mprestamos_personales)
 
 res_columnasDF <- aggregate(columna3 ~ columna1 + columna2, 
-                                data = columnasDF_New, FUN = sum)
+                                data = columnasDF, FUN = sum)
 
 setorder(res_columnasDF, columna1)
 
@@ -338,6 +341,7 @@ switch(PARAM$metodo,
   "Frollmean"           = Corregir_Frollmean(dataset)
 )
 
+# Tabla resumen - desp de corregir el dataset
 columnasDF_New <- data.frame(columna1 = dataset$numero_de_cliente, 
                              columna2 = dataset$foto_mes,
                              columna3 = dataset$mprestamos_personales)

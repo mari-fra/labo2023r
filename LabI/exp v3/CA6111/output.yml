@@ -1,7 +1,0 @@
-PARAM:
-  experimento: CA6111
-  dataset: dataset_pequeño.csv
-  metodo: Frollmean
-  home: ~/Documents/MaestriaAustral/LaboratorioI/LabI/labo2023r/LabI/
-time:
-  start: 20230712 072838
