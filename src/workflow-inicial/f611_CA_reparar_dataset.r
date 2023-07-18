@@ -280,7 +280,7 @@ Corregir_Frollmean <- function(dataset) {
   CorregirCampoMes_Frollmean('matm',c(202006))
   CorregirCampoMes_Frollmean('catm_trx_other',c(202006))
   CorregirCampoMes_Frollmean('matm_other',c(202006))
-  CorregirCampoMes_Frollmean('tmobile_app',c(202006))
+  #CorregirCampoMes_Frollmean('tmobile_app',c(202006))
   CorregirCampoMes_Frollmean('cmobile_app_trx',c(202006))
 }
 
@@ -313,7 +313,7 @@ setorder(dataset, numero_de_cliente, foto_mes)
 #para varidar guardamos una tabla resumen - Antes de aplicar la funcion
 columnasDF <- data.frame(columna1 = dataset$numero_de_cliente,
                          columna2 = dataset$foto_mes,
-                         columna3 = dataset$mprestamos_personales)
+                         columna3 = dataset$mrentabilidad_annual)
 
 res_columnasDF <- aggregate(columna3 ~ columna1 + columna2, 
                                 data = columnasDF, FUN = sum)
@@ -338,7 +338,7 @@ switch(PARAM$metodo,
 # Tabla resumen - desp de corregir el dataset
 columnasDF_New <- data.frame(columna1 = dataset$numero_de_cliente, 
                              columna2 = dataset$foto_mes,
-                             columna3 = dataset$mprestamos_personales)
+                             columna3 = dataset$mrentabilidad_annual)
 
 res_columnasDF_New <- aggregate(columna3 ~ columna1 + columna2, 
                                 data = columnasDF_New, FUN = sum)
