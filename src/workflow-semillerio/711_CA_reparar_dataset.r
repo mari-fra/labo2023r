@@ -10,12 +10,12 @@ require("yaml")
 
 # Parametros del script
 PARAM <- list()
-PARAM$experimento <- "CA6114"
+PARAM$experimento <- "CA7110"
 PARAM$dataset <- "./datasets/competencia_2023.csv.gz"
 
 # valores posibles
-#  "MachineLearning"  "EstadisticaClasica" "Ninguno" "Frollmean"
-PARAM$metodo <- "Frollmean"
+#  "MachineLearning"  "EstadisticaClasica" "Ninguno"
+PARAM$metodo <- "MachineLearning"
 PARAM$home <- "~/buckets/b1/"
 
 # FIN Parametros del script
@@ -55,31 +55,6 @@ CorregirCampoMes <- function(pcampo, pmeses) {
     )
   ]
 }
-
-CorregirCampoMes_Frollmean <- function(pcampo, pmeses) {
-  tbl <- dataset[, list(  #Se crea el dataset tbl con cuatro columnas
-    "v1" = shift(get(pcampo), 2, type = "lag"), #2 meses antes
-    "v2" = shift(get(pcampo), 2, type = "lead"), #1 mes antes
-    "v3" = shift(get(pcampo), 1, type = "lag"), #1 mes despues
-    "v4" = shift(get(pcampo), 1, type = "lead") #2 meses despues
-  ),
-  by = numero_de_cliente  #Agrupa por cliente. 
-  ]
-  #Imp: debe estar ordenado por foto_mes y nro de cliente
-  
-  tbl[, numero_de_cliente := NULL] #completa con null esta variable
-  tbl[, promedio := rowMeans(tbl[, list(v1, v2, v3, v4)], na.rm = TRUE)] #promedia por fila las 4 columnas generadas
-  #y agrega la columna promedio
-  dataset[
-    ,
-    paste0(pcampo) := ifelse(!(foto_mes %in% pmeses),#si foto_mes esta dentro del vecto de meses
-                             get(pcampo),            #se corrige el valor con promedio
-                             tbl$promedio
-    )
-  ]
-}
-
-
 #------------------------------------------------------------------------------
 # reemplaza cada variable ROTA  (variable, foto_mes)
 #  con el promedio entre  ( mes_anterior, mes_posterior )
@@ -231,60 +206,6 @@ Corregir_MachineLearning <- function(dataset) {
   dataset[foto_mes == 202006, ctrx_quarter := NA]
   dataset[foto_mes == 202006, cmobile_app_trx := NA]
 }
-
-Corregir_Frollmean <- function(dataset) {  
-  CorregirCampoMes_Frollmean('ctarjeta_visa_debitos_automaticos',c(201904))
-  CorregirCampoMes_Frollmean('mttarjeta_visa_debitos_automaticos',c(201904))
-  CorregirCampoMes_Frollmean('mrentabilidad',c(201905,201910,202006))
-  CorregirCampoMes_Frollmean('mrentabilidad_annual',c(201905,201910,202006))
-  CorregirCampoMes_Frollmean('mcomisiones',c(201905,201910,202006))
-  CorregirCampoMes_Frollmean('mactivos_margen',c(201905,201910,202006))
-  CorregirCampoMes_Frollmean('mpasivos_margen',c(201905,201910,202006))
-  CorregirCampoMes_Frollmean('ccomisiones_otras',c(201905,201910,202006))
-  CorregirCampoMes_Frollmean('mcomisiones_otras',c(201905,201910,202006))
-  CorregirCampoMes_Frollmean('ccajeros_propios_descuentos',c(201910,202002,202006,202009,202010,202102))
-  CorregirCampoMes_Frollmean('mcajeros_propios_descuentos',c(201910,202002,202006,202009,202010,202102))
-  CorregirCampoMes_Frollmean('ctarjeta_visa_descuentos',c(201910,202002,202006,202009,202010,202102))
-  CorregirCampoMes_Frollmean('mtarjeta_visa_descuentos',c(201910,202002,202006,202009,202010,202102))
-  CorregirCampoMes_Frollmean('ctarjeta_master_descuentos',c(201910,202002,202006,202009,202010,202102))
-  CorregirCampoMes_Frollmean('mtarjeta_master_descuentos',c(201910,202002,202006,202009,202010,202102))
-  CorregirCampoMes_Frollmean('chomebanking_transacciones',c(201910,202006))
-  CorregirCampoMes_Frollmean('active_quarter',c(202006))
-  CorregirCampoMes_Frollmean('internet',c(202006))
-  CorregirCampoMes_Frollmean('mcuentas_saldo',c(202006))
-  CorregirCampoMes_Frollmean('ctarjeta_debito_transacciones',c(202006))
-  CorregirCampoMes_Frollmean('mautoservicio',c(202006))
-  CorregirCampoMes_Frollmean('ctarjeta_visa_transacciones',c(202006))
-  CorregirCampoMes_Frollmean('mtarjeta_visa_consumo',c(202006))
-  CorregirCampoMes_Frollmean('ctarjeta_master_transacciones',c(202006))
-  CorregirCampoMes_Frollmean('mtarjeta_master_consumo',c(202006))
-  CorregirCampoMes_Frollmean('cextraccion_autoservicio',c(202006))
-  CorregirCampoMes_Frollmean('mextraccion_autoservicio',c(202006))
-  CorregirCampoMes_Frollmean('ccheques_depositados',c(202006))
-  CorregirCampoMes_Frollmean('mcheques_depositados',c(202006))
-  CorregirCampoMes_Frollmean('ccheques_emitidos',c(202006))
-  CorregirCampoMes_Frollmean('mcheques_emitidos',c(202006))
-  CorregirCampoMes_Frollmean('ccheques_depositados_rechazados',c(202006))
-  CorregirCampoMes_Frollmean('mcheques_depositados_rechazados',c(202006))
-  CorregirCampoMes_Frollmean('ccheques_emitidos_rechazados',c(202006))
-  CorregirCampoMes_Frollmean('mcheques_emitidos_rechazados',c(202006))
-  CorregirCampoMes_Frollmean('tcallcenter',c(202006))
-  CorregirCampoMes_Frollmean('ccallcenter_transacciones',c(202006))
-  CorregirCampoMes_Frollmean('thomebanking',c(202006))
-  CorregirCampoMes_Frollmean('ccajas_transacciones',c(202006))
-  CorregirCampoMes_Frollmean('ccajas_consultas',c(202006))
-  CorregirCampoMes_Frollmean('ccajas_depositos',c(202006,202105))
-  CorregirCampoMes_Frollmean('ccajas_extracciones',c(202006))
-  CorregirCampoMes_Frollmean('ccajas_otras',c(202006))
-  CorregirCampoMes_Frollmean('catm_trx',c(202006))
-  CorregirCampoMes_Frollmean('matm',c(202006))
-  CorregirCampoMes_Frollmean('catm_trx_other',c(202006))
-  CorregirCampoMes_Frollmean('matm_other',c(202006))
-  #CorregirCampoMes_Frollmean('tmobile_app',c(202006))
-  CorregirCampoMes_Frollmean('cmobile_app_trx',c(202006))
-}
-
-
 #------------------------------------------------------------------------------
 #------------------------------------------------------------------------------
 # Aqui empieza el programa
@@ -310,49 +231,15 @@ write_yaml(PARAM, file = "parametros.yml") # escribo parametros utilizados
 
 setorder(dataset, numero_de_cliente, foto_mes)
 
-#para varidar guardamos una tabla resumen - Antes de aplicar la funcion
-columnasDF <- data.frame(columna1 = dataset$numero_de_cliente,
-                         columna2 = dataset$foto_mes,
-                         columna3 = dataset$mrentabilidad_annual)
-
-res_columnasDF <- aggregate(columna3 ~ columna1 + columna2, 
-                                data = columnasDF, FUN = sum)
-
-setorder(res_columnasDF, columna1)
-
-fwrite(res_columnasDF,
-       file = "resumen_columnas.csv",
-       logical01 = TRUE,
-       sep = ","
-)
-
-
 # corrijo los  < foto_mes, campo >  que fueron pisados con cero
 switch(PARAM$metodo,
   "MachineLearning"     = Corregir_MachineLearning(dataset),
   "EstadisticaClasica"  = Corregir_EstadisticaClasica(dataset),
   "Ninguno"             = cat("No se aplica ninguna correccion.\n"),
-  "Frollmean"           = Corregir_Frollmean(dataset)
 )
 
-# Tabla resumen - desp de corregir el dataset
-columnasDF_New <- data.frame(columna1 = dataset$numero_de_cliente, 
-                             columna2 = dataset$foto_mes,
-                             columna3 = dataset$mrentabilidad_annual)
-
-res_columnasDF_New <- aggregate(columna3 ~ columna1 + columna2, 
-                                data = columnasDF_New, FUN = sum)
-
-setorder(res_columnasDF_New, columna1)
-
-fwrite(res_columnasDF_New,
-       file = "resumen_columnas_New.csv",
-       logical01 = TRUE,
-       sep = ","
-)
 
 #------------------------------------------------------------------------------
-
 # grabo el dataset
 fwrite(dataset,
   file = "dataset.csv.gz",

@@ -17,7 +17,7 @@ PARAM$num_iterations <- 5
 archivo <- "https://storage.googleapis.com/open-courses/austral2023r-e52a/AustralitosVirtualitos.txt"
 
 #------------------------------------------------------------------------------
-
+  
 options(error = function() {
   traceback(20)
   options(error = NULL)
