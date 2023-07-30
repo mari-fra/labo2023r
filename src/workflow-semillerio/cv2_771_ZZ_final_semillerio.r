@@ -25,7 +25,7 @@ PARAM$exp_input <- "HT7510_cv"
 
 # Que modelos quiero, segun su posicion en el ranking
 # de la Bayesian Optimizacion, ordenado por ganancia descendente
-PARAM$modelos_rank <- c(7) #1250 arboles. Ganancia: 869624910 ID_OB: 17
+PARAM$modelos_rank <- c(7) #1250 arboles. Ganancia: 921506431 ID_OB: 17
 
 # cantidad de semillas a utilizar en el semillerio,
 #  podrian ser 50 o 100 para mayor estabilidad
